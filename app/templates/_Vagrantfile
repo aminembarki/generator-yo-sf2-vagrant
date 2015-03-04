@@ -298,9 +298,7 @@ Vagrant.configure('2') do |config|
   config.hostsupdater.remove_on_suspend = true
 
   config.hostsupdater.aliases = [
-  "planet-test.dev",
-  "m.planet-test.dev",
-  "cplus.planet-test.dev",
+  "<%= VagrantConfig.host %>",
   ]
 
   #retrieve apache hosts from vhosts

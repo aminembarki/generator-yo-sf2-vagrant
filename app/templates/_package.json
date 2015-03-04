@@ -1,0 +1,23 @@
+{
+  "name": "<%= _.slugify(appname) %>",
+  "version": "0.0.1",
+  "author": "Amine Mbarki <aminembarki@gmail.com>",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "dependencies": {
+      "gulp": "^3.8.8",
+      <% if (gulpRubySass) { %>"gulp-ruby-sass": "^0.7.1",<% } %>
+      <% if (gulpRubySass) { %>"gulp-minify-css": "^0.3.10",<% } %>
+      <% if (gulpRubySass) { %>"gulp-plumber": "^0.6.6",<% } %>
+      <% if (gulpRubySass) { %>"gulp-rename": "^1.2.0",<% } %>
+      <% if (gulpRubySass) { %>"gulp-watch": "^1.1.0",<% } %>
+      <% if (gulpConcat) { %>"gulp-concat": "^2.4.1",<% } %>
+      <% if (gulpCopy) { %>"gulp-copy": "0.0.2",<% } %>
+      <% if (gulpConcat) { %>"gulp-uglify": "^1.0.1",<% } %>
+      "gulp-load-plugins": "^0.7.0"
+
+  }
+}

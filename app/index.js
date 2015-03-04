@@ -106,6 +106,54 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
   },
 
 
+  askVagrantCustom: function () {
+    if (this.VagrantRepo !== null) {
+      var done = this.async();
+
+
+
+      var prompts = [{
+          type: 'String',
+          name: 'host',
+          default: 'domain.dev',
+          message: 'Please provide Vagrant host:'
+        },
+        {
+          type: 'String',
+          name: 'database_name',
+          default: 'dbname',
+          message: 'Please provide MySql database name:'
+        },
+        {
+          type: 'String',
+          name: 'database_user',
+          default: 'dbuser',
+          message: 'Please provide MySql database user:'
+        }
+        ,
+        {
+          type: 'String',
+          name: 'database_password',
+          default: '123',
+          message: 'Please provide MySql database password:'
+        }
+
+      ];
+
+      this.prompt(prompts, function(answers) {
+
+
+        this.VagrantConfig = {
+          host: answers.host,
+          database_name: answers.database_name,
+          database_user: answers.database_user,
+          database_password: answers.database_password
+        };
+
+        done();
+      }.bind(this));
+    }
+  },
 
   askGulpCustom: function() {
 
@@ -255,6 +303,9 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
       );
       this.template('_bower.json', 'bower.json');
       this.template('_package.json', 'package.json');
+      this.template('_config.yaml', './puphpet/config.yaml');
+      this.template('_parameters.yml.dist', './app/config/parameters.yml.dist');
+      this.template('_Vagrantfile', 'Vagrantfile');
     },
 
     projectfiles: function () {

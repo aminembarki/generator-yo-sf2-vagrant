@@ -5,6 +5,7 @@ var yeoman = require('yeoman-generator');
 var yosay = require('yosay');
 var yaml = require('js-yaml');
 var fs = require('fs');
+var Download = require('download');
 
 var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
   initializing: function () {
@@ -83,7 +84,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     this.VagrantTemplate = {
       username: 'aminembarki',
       repository: 'puphpet-vagrant',
-      commit: '0.1.1'
+      commit: '0.1.2'
     };
 
     var prompts = [{
@@ -230,25 +231,6 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     );
   },
 
-  vagrantBase: function() {
-    if (this.VagrantRepo !== null) {
-      var done = this.async();
-      var appPath = this.destinationRoot();
-
-      this.remote(
-        this.VagrantTemplate.username,
-        this.VagrantTemplate.repository,
-        this.VagrantTemplate.commit,
-        function (err, remote) {
-          if (err) {
-            return done(err);
-          }
-          remote.directory('.', path.join(appPath, '.'));
-          done();
-        }
-      );
-    }
-  },
   askbundle: function() {
     var done = this.async();
 
@@ -289,6 +271,23 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
 
   },
 
+  vagrantBase: function() {
+    if (this.VagrantRepo !== null) {
+      var done = this.async();
+      var appPath = this.destinationRoot();
+
+      var download = new Download({extract: true, strip: 1, mode: '755'})
+        .get('https://nodeload.github.com/'+this.VagrantTemplate.username+'/'+this.VagrantTemplate.repository+'/zip/'+this.VagrantTemplate.commit)
+        .dest(path.join(appPath, '.'));
+
+      download.run(function (err, files) {
+        if (err) {
+          throw err;
+        }
+        done();
+      });
+    }
+  },
 
   writing: {
     app: function () {
@@ -303,9 +302,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
       );
       this.template('_bower.json', 'bower.json');
       this.template('_package.json', 'package.json');
-      this.template('_config.yaml', './puphpet/config.yaml');
       this.template('_parameters.yml.dist', './app/config/parameters.yml.dist');
-      this.template('_Vagrantfile', 'Vagrantfile');
     },
 
     projectfiles: function () {
@@ -325,6 +322,10 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
         this.templatePath('jshintrc'),
         this.destinationPath('.jshintrc')
       );
+
+      this.conflicter.force = true;
+      this.template('_config.yaml', './puphpet/config.yaml');
+      this.template('_Vagrantfile', 'Vagrantfile');
     }
   },
 

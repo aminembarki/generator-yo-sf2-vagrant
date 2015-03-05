@@ -11,7 +11,7 @@ vagrantfile-local:
             private_network: 192.168.56.<%= Math.floor(Math.random() * 200 + 10) %>
             forwarded_port:
                 bek6KqWri7B6:
-                    host: '5525'
+                    host: '<%= Math.floor(Math.random() * 3000 + 1000) %>'
                     guest: '22'
         post_up_message: ''
         provider:

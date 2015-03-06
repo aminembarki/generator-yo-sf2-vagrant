@@ -159,8 +159,8 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
   askGulpCustom: function() {
 
       var done = this.async();
-
-      var prompts = [{
+      this.hasGulp = null;
+    var prompts = [{
         type: 'checkbox',
         name: 'gulpCustom',
         message: 'Customize Gulpfile',
@@ -191,7 +191,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
         this.gulpRubySass = hasFeature('gulpRubySass');
         this.gulpCopy = hasFeature('gulpCopy');
         this.gulpConcat = hasFeature('gulpConcat');
-
+        this.hasGulp = (this.gulpRubySass || this.gulpCopy || this.gulpConcat);
         done();
       }.bind(this));
 
@@ -289,45 +289,53 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     }
   },
 
+  configuring:function(){
+    this.fs.copy(
+      this.templatePath('_gitignore'),
+      this.destinationPath('.gitignore')
+    );
+    this.fs.copy(
+      this.templatePath('_bowerrc'),
+      this.destinationPath('.bowerrc')
+    );
+    this.fs.copy(
+      this.templatePath('editorconfig'),
+      this.destinationPath('.editorconfig')
+    );
+    this.fs.copy(
+      this.templatePath('_config.rb'),
+      this.destinationPath('config.rb')
+    );
+    this.fs.copy(
+      this.templatePath('_gitattributes'),
+      this.destinationPath('.gitattributes')
+    );
+    this.fs.copy(
+      this.templatePath('jshintrc'),
+      this.destinationPath('.jshintrc')
+    );
+  },
   writing: {
     app: function () {
-      this.template('_Gulpfile.js', 'Gulpfile.js');
-      this.fs.copy(
-        this.templatePath('_gitignore'),
-        this.destinationPath('.gitignore')
-      );
-      this.fs.copy(
-        this.templatePath('_bowerrc'),
-        this.destinationPath('.bowerrc')
-      );
+      if (this.hasGulp !== null)
+        this.template('_Gulpfile.js', 'Gulpfile.js');
       this.template('_bower.json', 'bower.json');
       this.template('_package.json', 'package.json');
-      this.template('_parameters.yml.dist', './app/config/parameters.yml.dist');
     },
 
     projectfiles: function () {
-      this.fs.copy(
-        this.templatePath('editorconfig'),
-        this.destinationPath('.editorconfig')
-      );
-      this.fs.copy(
-        this.templatePath('_config.rb'),
-        this.destinationPath('config.rb')
-      );
-      this.fs.copy(
-        this.templatePath('_gitattributes'),
-        this.destinationPath('.gitattributes')
-      );
-      this.fs.copy(
-        this.templatePath('jshintrc'),
-        this.destinationPath('.jshintrc')
-      );
-
-      this.conflicter.force = true;
-      this.template('_config.yaml', './puphpet/config.yaml');
-      this.template('_Vagrantfile', 'Vagrantfile');
+      if (this.VagrantRepo !== null) {
+        this.conflicter.force = true;
+        this.fs.copy( this.templatePath('app.php'), this.destinationPath('web/app.php'));
+        this.fs.copy( this.templatePath('app_dev.php'), this.destinationPath('web/app_dev.php'));
+        this.template('_parameters.yml.dist', './app/config/parameters.yml.dist');
+        this.template('_config.yaml', './puphpet/config.yaml');
+        this.template('_Vagrantfile', 'Vagrantfile');
+      }
     }
   },
+
+
 
   install: function () {
     this.installDependencies({
@@ -388,6 +396,11 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
       }
 
       this.spawnCommand('composer', ['install']);
+
+      this.fs.copy(
+        this.templatePath('README.md'),
+        this.destinationPath('README.md')
+      );
     }
   }
 });

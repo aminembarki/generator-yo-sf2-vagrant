@@ -12,7 +12,7 @@ describe('yo-sf2-vagrant:app', function () {
       .inDir(path.join(os.tmpdir(), './temp-test'))
       .withOptions({ 'skip-install': true })
       .withPrompt({
-        someOption: true
+        symfonyStandard: true
       })
       .on('end', done);
   });

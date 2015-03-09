@@ -289,32 +289,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     }
   },
 
-  configuring:function(){
-    this.fs.copy(
-      this.templatePath('_gitignore'),
-      this.destinationPath('.gitignore')
-    );
-    this.fs.copy(
-      this.templatePath('_bowerrc'),
-      this.destinationPath('.bowerrc')
-    );
-    this.fs.copy(
-      this.templatePath('editorconfig'),
-      this.destinationPath('.editorconfig')
-    );
-    this.fs.copy(
-      this.templatePath('_config.rb'),
-      this.destinationPath('config.rb')
-    );
-    this.fs.copy(
-      this.templatePath('_gitattributes'),
-      this.destinationPath('.gitattributes')
-    );
-    this.fs.copy(
-      this.templatePath('jshintrc'),
-      this.destinationPath('.jshintrc')
-    );
-  },
+
   writing: {
     app: function () {
       if (this.hasGulp !== null)
@@ -324,6 +299,36 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     },
 
     projectfiles: function () {
+        this.fs.copy(
+            this.templatePath('_gitignore'),
+            this.destinationPath('.gitignore')
+        );
+        this.fs.copy(
+            this.templatePath('_bowerrc'),
+            this.destinationPath('.bowerrc')
+        );
+        this.fs.copy(
+            this.templatePath('editorconfig'),
+            this.destinationPath('.editorconfig')
+        );
+        this.fs.copy(
+            this.templatePath('_config.rb'),
+            this.destinationPath('config.rb')
+        );
+        this.fs.copy(
+            this.templatePath('_gitattributes'),
+            this.destinationPath('.gitattributes')
+        );
+        this.fs.copy(
+            this.templatePath('jshintrc'),
+            this.destinationPath('.jshintrc')
+        );
+
+        this.fs.copy(
+            this.templatePath('README.md'),
+            this.destinationPath('README.md')
+        );
+
       if (this.VagrantRepo !== null) {
         this.conflicter.force = true;
         this.fs.copy( this.templatePath('app.php'), this.destinationPath('web/app.php'));
@@ -397,10 +402,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
 
       this.spawnCommand('composer', ['install']);
 
-      this.fs.copy(
-        this.templatePath('README.md'),
-        this.destinationPath('README.md')
-      );
+
     }
   }
 });

@@ -84,7 +84,7 @@ var YoSf2VagrantGenerator = yeoman.generators.Base.extend({
     this.VagrantTemplate = {
       username: 'aminembarki',
       repository: 'puphpet-vagrant',
-      commit: '0.1.2'
+      commit: '0.1.3'
     };
 
     var prompts = [{
